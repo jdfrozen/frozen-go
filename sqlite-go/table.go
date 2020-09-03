@@ -1,11 +1,5 @@
 package main
 
-type Row struct {
-	id   uint16
-	name [32]byte
-	age  uint8
-}
-
 type Pager struct {
 	index   uint16
 	rowNums uint16
