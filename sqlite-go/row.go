@@ -8,7 +8,7 @@ import (
 
 type Row struct {
 	id   uint16
-	name [32]byte
+	name string
 	age  uint8
 }
 
@@ -18,23 +18,29 @@ func createBytes(row Row) [35]byte {
 	buf := bytes.NewBuffer(make([]byte, 0))
 	binary.Write(buf, binary.BigEndian, id)
 	var idb = buf.Bytes()
-
 	//age
 	var age = row.age
 	bufAge := bytes.NewBuffer(make([]byte, 0))
 	binary.Write(bufAge, binary.BigEndian, age)
 	var ageb = bufAge.Bytes()
-
-	var nameb = row.name
+	//序列化id
 	var rowb = [35]byte{}
 	var idbLen = len(idb)
-	var namebLen = len(nameb)
 	for i, b := range idb {
 		rowb[i] = b
+	}
+	//序列化name
+	var name = row.name
+	var datas = []byte(name)
+	var nameb = [32]byte{}
+	for i, data := range datas {
+		nameb[i] = data
 	}
 	for i, b := range nameb {
 		rowb[i+idbLen] = b
 	}
+	//序列化age
+	var namebLen = len(nameb)
 	for i, b := range ageb {
 		rowb[i+namebLen+idbLen] = b
 	}
@@ -62,22 +68,15 @@ func createRow(rowbs [35]byte) Row {
 	agebuf := bytes.NewBuffer(ageb)
 	var age uint8
 	binary.Read(agebuf, binary.BigEndian, &age)
-	row := Row{id, nameb, age}
+	row := Row{id, string(nameb[:]), age}
 	return row
 }
 
 func main() {
-
-	var str = "frozen"
-	var datas = []byte(str)
-	var nameb = [32]byte{}
-	for i, data := range datas {
-		nameb[i] = data
-	}
-	frozen := Row{1, nameb, 2}
+	frozen := Row{1, "frozen", 2}
 	var rowbs = createBytes(frozen)
 	var row = createRow(rowbs)
 	fmt.Println(row.id)
 	fmt.Println(row.age)
-	fmt.Println(string(row.name[:]))
+	fmt.Println(row.name)
 }
