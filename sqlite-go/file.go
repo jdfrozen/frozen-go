@@ -5,14 +5,14 @@ import (
 	"os"
 )
 
-func write() {
+func write(bytes []byte) {
 	file, err := os.Open("frozen.db")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer file.Close()
 	//从文件中读取16个字节
-	bytes := make([]byte, 16)
+	//bytes := make([]byte, 16)
 	br, err := file.WriteAt(bytes, 0)
 	if err != nil {
 		log.Fatal(err)
