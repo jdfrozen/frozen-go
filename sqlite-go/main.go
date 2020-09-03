@@ -10,12 +10,11 @@ func main() {
 	writeDb(rowbs)
 	var rowbsr = readDb(35)
 	var row = createRow(rowbsr)
-	fmt.Println(row.id)
-	fmt.Println(row.age)
-	fmt.Println(row.name)
+	fmt.Println(row)
 	for {
 		var input string
-		fmt.Scanf("%s", &input)
+		fmt.Scanln(&input)
+		vm(input)
 		fmt.Printf("> ")
 	}
 

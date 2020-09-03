@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 )
 
@@ -23,15 +22,15 @@ func writeDb(bytes []byte) {
 func readDb(len int64) []byte {
 	file, err := os.Open("frozen.db")
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
 	defer file.Close()
 	//从文件中读取16个字节
 	bytes := make([]byte, len)
 	length, err := file.ReadAt(bytes, 0)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
-	log.Printf("number of bytes read: %d\n", length)
+	fmt.Printf("number of bytes read: %d\n", length)
 	return bytes
 }
