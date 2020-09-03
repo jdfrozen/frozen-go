@@ -27,6 +27,8 @@ func selectAll() {
 			var row = createRow(bytes)
 			fmt.Println(row)
 			a = 0
+		} else {
+			a++
 		}
 	}
 }
