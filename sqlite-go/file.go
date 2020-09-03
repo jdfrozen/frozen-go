@@ -1,38 +1,37 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 )
 
-func write(bytes []byte) {
-	file, err := os.Open("frozen.db")
+func writeDb(bytes []byte) {
+	path := "frozen.db"
+	f, err := os.Create(path)
+	defer f.Close()
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
-	defer file.Close()
-	//从文件中读取16个字节
-	//bytes := make([]byte, 16)
-	br, err := file.WriteAt(bytes, 0)
+	length, err := f.WriteAt(bytes, 0)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
-	log.Printf("number of bytes write: %d\n", br)
-	log.Printf("Data read: %s\n", bytes)
+	fmt.Println(length)
 }
 
-func read() {
+func readDb(len int64) []byte {
 	file, err := os.Open("frozen.db")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer file.Close()
 	//从文件中读取16个字节
-	bytes := make([]byte, 16)
-	br, err := file.Read(bytes)
+	bytes := make([]byte, len)
+	length, err := file.ReadAt(bytes, 0)
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("number of bytes read: %d\n", br)
-	log.Printf("Data read: %s\n", bytes)
+	log.Printf("number of bytes read: %d\n", length)
+	return bytes
 }

@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"encoding/binary"
-	"fmt"
 )
 
 type Row struct {
@@ -12,7 +11,7 @@ type Row struct {
 	age  uint8
 }
 
-func createBytes(row Row) [35]byte {
+func createBytes(row Row) []byte {
 	//id
 	var id = row.id
 	buf := bytes.NewBuffer(make([]byte, 0))
@@ -24,7 +23,7 @@ func createBytes(row Row) [35]byte {
 	binary.Write(bufAge, binary.BigEndian, age)
 	var ageb = bufAge.Bytes()
 	//序列化id
-	var rowb = [35]byte{}
+	var rowb = make([]byte, 35)
 	var idbLen = len(idb)
 	for i, b := range idb {
 		rowb[i] = b
@@ -47,7 +46,7 @@ func createBytes(row Row) [35]byte {
 	return rowb
 }
 
-func createRow(rowbs [35]byte) Row {
+func createRow(rowbs []byte) Row {
 	var idb = make([]byte, 2)
 	var nameb [32]byte
 	var ageb = make([]byte, 1)
@@ -70,13 +69,4 @@ func createRow(rowbs [35]byte) Row {
 	binary.Read(agebuf, binary.BigEndian, &age)
 	row := Row{id, string(nameb[:]), age}
 	return row
-}
-
-func main() {
-	frozen := Row{1, "frozen", 2}
-	var rowbs = createBytes(frozen)
-	var row = createRow(rowbs)
-	fmt.Println(row.id)
-	fmt.Println(row.age)
-	fmt.Println(row.name)
 }
