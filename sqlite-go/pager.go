@@ -3,11 +3,13 @@ package main
 import (
 	"bytes"
 	"encoding/binary"
+	"fmt"
 )
 
 type Pager struct {
 	index  uint16
 	rowNum uint16
+	rows   []Row
 }
 
 func savePager(pager Pager) []byte {
@@ -50,6 +52,21 @@ func readerPager(onePage []byte) Pager {
 	agebuf := bytes.NewBuffer(rowNumb)
 	var rowNum uint16
 	binary.Read(agebuf, binary.BigEndian, &rowNum)
-	pager := Pager{index, rowNum}
+	if rowNum == 0 {
+		return Pager{index, rowNum, nil}
+	}
+	var rowIndex = 4
+	maxRowIndex := int(rowNum * 35)
+	for rowIndex <= maxRowIndex {
+		if rowIndex == 34 {
+			var row = createRow(onePage)
+			fmt.Println(row)
+			rowIndex = 0
+		} else {
+			rowIndex++
+		}
+	}
+	var rows = make([]Row, 0)
+	pager := Pager{index, rowNum, rows}
 	return pager
 }
