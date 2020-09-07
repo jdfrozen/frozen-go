@@ -34,15 +34,15 @@ func savePager(pager Pager) []byte {
 	return pageb
 }
 
-func readerPager(rowbs []byte) Pager {
+func readerPager(onePage []byte) Pager {
 	var indexb = make([]byte, 2)
 	var rowNumb = make([]byte, 2)
 	var indexbLen = len(indexb)
 	for i, _ := range indexb {
-		indexb[i] = rowbs[i]
+		indexb[i] = onePage[i]
 	}
 	for i, _ := range rowNumb {
-		rowNumb[i] = rowbs[i+indexbLen]
+		rowNumb[i] = onePage[i+indexbLen]
 	}
 	buf := bytes.NewBuffer(indexb)
 	var index uint16
