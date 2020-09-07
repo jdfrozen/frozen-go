@@ -11,7 +11,7 @@ type Pager struct {
 	rows   []Row
 }
 
-func savePager(pager Pager) []byte {
+func savePager(pager Pager) {
 	//index
 	var index = pager.index
 	buf := bytes.NewBuffer(make([]byte, 0))
@@ -23,14 +23,14 @@ func savePager(pager Pager) []byte {
 	binary.Write(bufAge, binary.BigEndian, rowNum)
 	var rowNumb = bufAge.Bytes()
 	//序列化
-	var pageb = make([]byte, 4096)
+	var pagerb = make([]byte, 4096)
 	var indexbLen = len(indexb)
 	for i, b := range indexb {
-		pageb[i] = b
+		pagerb[i] = b
 	}
 	//序列化rowNum
 	for i, b := range rowNumb {
-		pageb[i+indexbLen] = b
+		pagerb[i+indexbLen] = b
 	}
 	//序列化rows
 	var i uint16 = 0
@@ -39,14 +39,15 @@ func savePager(pager Pager) []byte {
 		row := pager.rows[i]
 		rowb := createBytes(row)
 		for _, b := range rowb {
-			pageb[pagebIndex] = b
+			pagerb[pagebIndex] = b
 			pagebIndex++
 		}
 	}
-	return pageb
+	writeDb(pagerb)
 }
 
-func readerPager(onePage []byte) Pager {
+func readerPager() Pager {
+	var onePage = readPagerOne()
 	var indexb = make([]byte, 2)
 	var rowNumb = make([]byte, 2)
 	var indexbLen = len(indexb)
@@ -79,7 +80,6 @@ func readerPager(onePage []byte) Pager {
 		rows[rowIndex] = row
 		rowIndex++
 	}
-
 	pager := Pager{index, rowNum, rows}
 	return pager
 }

@@ -35,8 +35,16 @@ func vm(str string) {
 		selectAll()
 		return
 	}
-	if strings.Contains(str, "testdb") {
-		testdb()
+	if strings.Contains(str, "savedb") {
+		savePager(pager)
+		return
+	}
+	if strings.Contains(str, "readdb") {
+		pageNew := readerPager()
+		var i uint16 = 0
+		for ; i < pageNew.rowNum; i++ {
+			fmt.Println(pageNew.rows[i])
+		}
 		return
 	}
 	inputErr()
