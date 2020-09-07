@@ -6,6 +6,14 @@ var buffer = make([]byte, 4096)
 var maxRow = (4096 / 35)
 var index = 0
 
+func initCache() {
+	datas := readDbAt(4096)
+	for i, b := range datas {
+		buffer[i] = b
+		i++
+	}
+}
+
 func insert(row Row) {
 	var indexRow = (index + 1) / 35
 	if indexRow >= maxRow {

@@ -5,6 +5,7 @@ import (
 )
 
 func main() {
+	initCache()
 	for {
 		var input string
 		fmt.Scanln(&input)
