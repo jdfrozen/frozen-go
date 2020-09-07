@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"encoding/binary"
-	"fmt"
 )
 
 type Pager struct {
@@ -13,25 +12,36 @@ type Pager struct {
 }
 
 func savePager(pager Pager) []byte {
-	//id
+	//index
 	var index = pager.index
 	buf := bytes.NewBuffer(make([]byte, 0))
 	binary.Write(buf, binary.BigEndian, index)
 	var indexb = buf.Bytes()
-	//age
+	//rowNumindex
 	var rowNum = pager.rowNum
 	bufAge := bytes.NewBuffer(make([]byte, 0))
 	binary.Write(bufAge, binary.BigEndian, rowNum)
 	var rowNumb = bufAge.Bytes()
-	//序列化id
-	var pageb = make([]byte, 4)
+	//序列化
+	var pageb = make([]byte, 4096)
 	var indexbLen = len(indexb)
 	for i, b := range indexb {
 		pageb[i] = b
 	}
-	//序列化age
+	//序列化rowNum
 	for i, b := range rowNumb {
 		pageb[i+indexbLen] = b
+	}
+	//序列化rows
+	var i uint16 = 0
+	var pagebIndex = 4
+	for ; i < pager.rowNum; i++ {
+		row := pager.rows[i]
+		rowb := createBytes(row)
+		for _, b := range rowb {
+			pageb[pagebIndex] = b
+			pagebIndex++
+		}
 	}
 	return pageb
 }
@@ -55,18 +65,21 @@ func readerPager(onePage []byte) Pager {
 	if rowNum == 0 {
 		return Pager{index, rowNum, nil}
 	}
-	var rowIndex = 4
-	maxRowIndex := int(rowNum * 35)
-	for rowIndex <= maxRowIndex {
-		if rowIndex == 34 {
-			var row = createRow(onePage)
-			fmt.Println(row)
-			rowIndex = 0
-		} else {
-			rowIndex++
+	var prIndex = 4
+	var rowIndex = 0
+	maxPrIndex := int(rowNum * 35)
+	var rows = make([]Row, rowNum)
+	for prIndex <= maxPrIndex {
+		var rowbs = make([]byte, 35)
+		for i, _ := range rowbs {
+			rowbs[i] = onePage[prIndex]
+			prIndex++
 		}
+		var row = createRow(rowbs)
+		rows[rowIndex] = row
+		rowIndex++
 	}
-	var rows = make([]Row, 0)
+
 	pager := Pager{index, rowNum, rows}
 	return pager
 }

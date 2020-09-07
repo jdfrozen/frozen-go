@@ -19,3 +19,12 @@ func selectAll() {
 		fmt.Println(pager.rows[i])
 	}
 }
+
+func testdb() {
+	var db = savePager(pager)
+	pageNew := readerPager(db)
+	var i uint16 = 0
+	for ; i < pageNew.rowNum; i++ {
+		fmt.Println(pageNew.rows[i])
+	}
+}

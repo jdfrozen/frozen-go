@@ -35,6 +35,10 @@ func vm(str string) {
 		selectAll()
 		return
 	}
+	if strings.Contains(str, "testdb") {
+		testdb()
+		return
+	}
 	inputErr()
 }
 
