@@ -9,12 +9,13 @@ func insert(row Row) {
 	if indexRow >= 116 {
 		panic("保存超过最大行数")
 	}
-	pager.rowNum++
 	pager.rows[pager.rowNum] = row
+	pager.rowNum++
 }
 
 func selectAll() {
-	for _, row := range pager.rows {
-		fmt.Println(row)
+	var i uint16 = 0
+	for ; i < pager.rowNum; i++ {
+		fmt.Println(pager.rows[i])
 	}
 }
