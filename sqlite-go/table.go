@@ -1,10 +1,5 @@
 package main
 
-type Pager struct {
-	index   uint16
-	rowNums uint16
-}
-
 type table struct {
 	index   uint16
 	pager   *Pager
