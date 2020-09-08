@@ -1,10 +1,13 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 var pager = Pager{0, 0, make([]Row, 116)}
 
-func insert(row Row) {
+func insert(row Row) error {
 	var indexRow = pager.rowNum
 	if indexRow >= 116 {
 		panic("保存超过最大行数")
@@ -13,10 +16,13 @@ func insert(row Row) {
 	if pager.rowNum == 0 {
 		pager.rows[pager.rowNum] = row
 		pager.rowNum++
-		return
+		return nil
 	}
 	//寻找插入的位置（二分查找）
-	index := getIndex(row.id)
+	index, err := getIndex(row.id)
+	if err != nil {
+		return err
+	}
 	//数组数据copy移动
 	rows := pager.rows
 	var i = int(pager.rowNum)
@@ -25,6 +31,7 @@ func insert(row Row) {
 	}
 	rows[index] = row
 	pager.rowNum++
+	return nil
 }
 
 func selectAll() {
@@ -35,7 +42,7 @@ func selectAll() {
 }
 
 //折半查找
-func getIndex(id uint16) int {
+func getIndex(id uint16) (int, error) {
 	rows := pager.rows
 	var startIndex = 0
 	var endIndex = int(pager.rowNum) - 1
@@ -44,7 +51,7 @@ func getIndex(id uint16) int {
 		index = (startIndex + endIndex) / 2
 		v := rows[index].id
 		if v == id {
-			break
+			return -1, errors.New("row exist !")
 		}
 		if v > id {
 			endIndex = index
@@ -65,5 +72,5 @@ func getIndex(id uint16) int {
 			break
 		}
 	}
-	return index
+	return index, nil
 }

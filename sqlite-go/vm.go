@@ -28,7 +28,10 @@ func vm(str string) {
 			return
 		}
 		row := Row{uint16(id), arr[2], uint8(age)}
-		insert(row)
+		err := insert(row)
+		if err != nil {
+			fmt.Println(err)
+		}
 		return
 	}
 	if strings.Contains(str, "select") {
