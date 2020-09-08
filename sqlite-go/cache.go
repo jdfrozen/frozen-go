@@ -13,9 +13,18 @@ func insert(row Row) {
 	if pager.rowNum == 0 {
 		pager.rows[pager.rowNum] = row
 		pager.rowNum++
+		return
 	}
 	//寻找插入的位置（二分查找）
-
+	index := getIndex(row.id)
+	//数组数据copy移动
+	rows := pager.rows
+	var i = int(pager.rowNum)
+	for ; i > index; i-- {
+		rows[i] = rows[i-1]
+	}
+	rows[index] = row
+	pager.rowNum++
 }
 
 func selectAll() {
@@ -26,11 +35,12 @@ func selectAll() {
 }
 
 //折半查找
-func getIndex(rows []Row, id uint16) int {
+func getIndex(id uint16) int {
+	rows := pager.rows
 	var startIndex = 0
-	var endIndex = len(rows) - 1
-	var index int
-	for endIndex > startIndex {
+	var endIndex = int(pager.rowNum) - 1
+	var index = endIndex
+	for endIndex >= startIndex {
 		index = (startIndex + endIndex) / 2
 		v := rows[index].id
 		if v == id {
@@ -41,7 +51,16 @@ func getIndex(rows []Row, id uint16) int {
 		} else {
 			startIndex = index
 		}
-		if (endIndex - startIndex) == 1 {
+		//在中间
+		if (endIndex - startIndex) <= 1 {
+			if id > rows[endIndex].id {
+				index = endIndex + 1
+				break
+			}
+			if id < rows[startIndex].id {
+				index = startIndex
+				break
+			}
 			index = endIndex
 			break
 		}
