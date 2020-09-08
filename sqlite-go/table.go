@@ -1,9 +1,8 @@
 package main
 
 type table struct {
-	index   uint16
-	pager   *Pager
-	rowNums uint16
+	root   uint64
+	rowNum uint16
 }
 
 //游标定义
