@@ -29,19 +29,21 @@ func selectAll() {
 func getIndex(rows []Row, id uint16) int {
 	var startIndex = 0
 	var endIndex = len(rows) - 1
-	startRow := rows[startIndex]
-	endRow := rows[endIndex]
 	var index int
-	for startRow.id >= endRow.id {
-		index = (startIndex + endIndex + 1) / 2
-		v := rows[index]
-		if v.id == id {
+	for endIndex > startIndex {
+		index = (startIndex + endIndex) / 2
+		v := rows[index].id
+		if v == id {
 			break
 		}
-		if v.id > id {
+		if v > id {
 			endIndex = index
 		} else {
 			startIndex = index
+		}
+		if (endIndex - startIndex) == 1 {
+			index = endIndex
+			break
 		}
 	}
 	return index
