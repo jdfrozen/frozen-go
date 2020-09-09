@@ -21,6 +21,7 @@ func writeDb(index int64, bytes []byte) {
 		panic(err)
 	}
 	off := index * 4096
+	f.Seek(0, 0)
 	length, err := f.WriteAt(bytes, off)
 	if err != nil {
 		panic(err)
@@ -29,7 +30,7 @@ func writeDb(index int64, bytes []byte) {
 }
 
 func readPagerOne(index int64) []byte {
-	if checkFileIsExist() {
+	if !checkFileIsExist() {
 		return make([]byte, 4096)
 	}
 	file, err := os.Open("frozen.db")

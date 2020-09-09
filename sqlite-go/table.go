@@ -11,8 +11,7 @@ type Table struct {
 	rowNum uint64
 }
 
-func initTable() {
-	table := Table{0}
+func initTable(table Table) {
 	//rowNumindex
 	var rowNum = table.rowNum
 	bufAge := bytes.NewBuffer(make([]byte, 0))
@@ -29,23 +28,20 @@ func initTable() {
 
 func readTable() Table {
 	var table = Table{0}
-	onePage := readPagerOne(1)
+	tablePage := readPagerOne(0)
 	var rootPageIndexb = make([]byte, 8)
 	var rowNumb = make([]byte, 8)
 	var indexbLen = len(rootPageIndexb)
 	for i, _ := range rootPageIndexb {
-		rootPageIndexb[i] = onePage[i]
+		rootPageIndexb[i] = tablePage[i]
 	}
 	for i, _ := range rowNumb {
-		rowNumb[i] = onePage[i+indexbLen]
+		rowNumb[i] = tablePage[i+indexbLen]
 	}
 	agebuf := bytes.NewBuffer(rowNumb)
 	var rowNum uint64
 	binary.Read(agebuf, binary.BigEndian, &rowNum)
 	table.rowNum = rowNum
-	if rowNum <= 0 {
-		return table
-	}
 	rootPage := readPagerOne(1)
 	pageNew := readerPager(rootPage)
 	var i uint16 = 0
@@ -66,6 +62,8 @@ func insert(row Row) error {
 		rootPage = readPagerOne(int64(index))
 		pager = readerPager(rootPage)
 	}
+	table.rowNum++
+	initTable(table)
 	var indexRow = pager.rowNum
 	if indexRow >= 116 {
 		panic("保存超过最大行数")

@@ -39,7 +39,7 @@ func vm(str string) {
 		return
 	}
 	if strings.Contains(str, "init") {
-		initTable()
+		initTable(Table{0})
 		return
 	}
 	inputErr()
