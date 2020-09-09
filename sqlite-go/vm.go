@@ -35,20 +35,11 @@ func vm(str string) {
 		return
 	}
 	if strings.Contains(str, "select") {
-		selectAll()
+		readTable()
 		return
 	}
-	if strings.Contains(str, "savedb") {
-		savePager(pager)
-		return
-	}
-	if strings.Contains(str, "readdb") {
-		onePage := readPagerOne(1)
-		pageNew := readerPager(onePage)
-		var i uint16 = 0
-		for ; i < pageNew.rowNum; i++ {
-			fmt.Println(pageNew.rows[i])
-		}
+	if strings.Contains(str, "init") {
+		initTable()
 		return
 	}
 	inputErr()
