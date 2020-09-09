@@ -11,7 +11,7 @@ type Pager struct {
 	rows   []Row
 }
 
-func savePager(pager Pager) {
+func savePager(pager Pager) []byte {
 	//index
 	var index = pager.index
 	buf := bytes.NewBuffer(make([]byte, 0))
@@ -43,11 +43,10 @@ func savePager(pager Pager) {
 			pagebIndex++
 		}
 	}
-	writeDb(pagerb)
+	return pagerb
 }
 
-func readerPager() Pager {
-	var onePage = readPagerOne()
+func readerPager(onePage []byte) Pager {
 	var indexb = make([]byte, 2)
 	var rowNumb = make([]byte, 2)
 	var indexbLen = len(indexb)

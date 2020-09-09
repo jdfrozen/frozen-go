@@ -19,7 +19,7 @@ func writeDb(bytes []byte) {
 	fmt.Println(length)
 }
 
-func readPagerOne() []byte {
+func readPagerOne(index int64) []byte {
 	file, err := os.Open("frozen.db")
 	if err != nil {
 		fmt.Println(err)
@@ -27,7 +27,8 @@ func readPagerOne() []byte {
 	defer file.Close()
 	//从文件中读取len个字节
 	bytes := make([]byte, 4096)
-	length, err := file.ReadAt(bytes, 0)
+	off := index * 4096
+	length, err := file.ReadAt(bytes, off)
 	if err != nil {
 		fmt.Println(err)
 	}

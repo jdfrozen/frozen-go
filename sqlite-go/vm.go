@@ -43,7 +43,8 @@ func vm(str string) {
 		return
 	}
 	if strings.Contains(str, "readdb") {
-		pageNew := readerPager()
+		onePage := readPagerOne(1)
+		pageNew := readerPager(onePage)
 		var i uint16 = 0
 		for ; i < pageNew.rowNum; i++ {
 			fmt.Println(pageNew.rows[i])
