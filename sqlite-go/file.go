@@ -5,14 +5,15 @@ import (
 	"os"
 )
 
-func writeDb(bytes []byte) {
+func writeDb(index int64, bytes []byte) {
 	path := "frozen.db"
 	f, err := os.Create(path)
 	defer f.Close()
 	if err != nil {
 		panic(err)
 	}
-	length, err := f.WriteAt(bytes, 0)
+	off := index * 4096
+	length, err := f.WriteAt(bytes, off)
 	if err != nil {
 		panic(err)
 	}
