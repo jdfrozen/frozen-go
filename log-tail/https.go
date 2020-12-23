@@ -1,4 +1,4 @@
-// gohttps/2-https/server.go
+// gohttps/2-https/HttpsServer.go
 package main
 
 import (
