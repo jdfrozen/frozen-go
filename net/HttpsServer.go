@@ -11,5 +11,5 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	http.HandleFunc("/", handler)
-	http.ListenAndServeTLS(":8081", "server.crt", "server.key", nil)
+	http.ListenAndServeTLS(":8081", "server.pem", "server-key.pem", nil)
 }
