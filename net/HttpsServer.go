@@ -12,6 +12,10 @@ import (
 func handler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hi, This is an example of https service in golang!")
 }
+func server1() {
+	http.HandleFunc("/", handler)
+	http.ListenAndServeTLS(":8081", "server.pem", "server-key.pem", nil)
+}
 func server() {
 	// ssl 双向检验
 	pool := x509.NewCertPool()
@@ -22,7 +26,7 @@ func server() {
 	pool.AppendCertsFromPEM(crt)
 	http.HandleFunc("/", handler)
 	s := &http.Server{
-		Addr: ":8080",
+		Addr: ":8081",
 		TLSConfig: &tls.Config{
 			ClientCAs:  pool,
 			ClientAuth: tls.RequireAndVerifyClientCert, // 检验客户端证书
@@ -32,6 +36,5 @@ func server() {
 	log.Fatal(s.ListenAndServeTLS("server.pem", "server-key.pem"))
 }
 func main() {
-	http.HandleFunc("/", handler)
-	http.ListenAndServeTLS(":8081", "server.pem", "server-key.pem", nil)
+	server()
 }

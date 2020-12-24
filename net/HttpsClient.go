@@ -79,7 +79,7 @@ func client() {
 		},
 	}
 	client := &http.Client{Transport: tr}
-	resp, err := client.Get("https://127.0.0.1:8080/")
+	resp, err := client.Get("https://127.0.0.1:8081/")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -87,6 +87,7 @@ func client() {
 	body, err := ioutil.ReadAll(resp.Body)
 	fmt.Println(string(body))
 }
+
 func main() {
-	PemRequest()
+	client()
 }
