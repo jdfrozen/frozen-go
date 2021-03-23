@@ -36,5 +36,5 @@ func server() {
 	log.Fatal(s.ListenAndServeTLS("server.pem", "server-key.pem"))
 }
 func main() {
-	server1()
+	server()
 }
